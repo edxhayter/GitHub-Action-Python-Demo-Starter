@@ -1,33 +1,45 @@
-name: update the Respository with a new phrase 
+name: Update the Repo with a new Phrase
 
 on: 
-  # manual trigger
-  workflow_dispatch 
+  # Manual trigger
+  workflow_dispatch:
 
-jobs: 
+jobs:
 
-  Refresh-phrases:
-  
-  runs-on: ubuntu-latest
+  Refresh-Phrase:
 
-steps: 
-- name: checkout repo
-- uses: actions/checkout@master
-- name: install python 
-  uses: actions/setup-python@v4
-    with:
-      python-version: '3.9.13'
-  - name: install requirements 
-  - run: | 
-      python -m pip install
-      pip install -r requirements.txt
-  - name: run script
-    run: python main.py
+    runs-on: ubuntu-latest
 
-  - name:commit files
-    run: |
-      git config --local user.email "actions@github.com"
-      git config --local user.name "GitHub Actions"
-      git add corporate_bs.txt
-      git commit -m 'Data updated' || echo "no changes to commit"
-      git push origin ||
+    steps:
+    - name: checkout repo
+      #this is a predefined set of steps made by github
+      uses: actions/checkout@master
+
+      #another predefined set of steps
+    - name: install python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.13'
+
+      #no action for us here (pipe means multiline)
+    - name: install requirements
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+      #once everything is setup, run the script
+    - name: run script
+      run: python Main.py
+
+      #Finally commit the change back to our repo
+    - name: commit files
+      run: |
+        #set up which user we are
+        git config --local user.email "actions@github.com"
+        git config --local user.name "Github Actions"
+        #add the output file
+        git add corporate_bs.txt
+        #commit and then push
+        git commit -m 'Data updated' || echo "No changes to commit"
+        git push origin || echo "No changes to commit"
+          
