@@ -1,0 +1,45 @@
+name: Update the Repo with a new Phrase
+
+on: 
+  # Manual trigger
+  workflow_dispatch:
+
+jobs:
+
+  Refresh-Phrase:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repo
+      #this is a predefined set of steps made by github
+      uses: actions/checkout@master
+
+      #another predefined set of steps
+    - name: install python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.13'
+
+      #no action for us here (pipe means multiline)
+    - name: install requirements
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+      #once everything is setup, run the script
+    - name: run script
+      run: python Main.py
+
+      #Finally commit the change back to our repo
+    - name: commit files
+      run: |
+        #set up which user we are
+        git config --local user.email "actions@github.com"
+        git config --local user.name "Github Actions"
+        #add the output file
+        git add corporate_bs.txt
+        #commit and then push
+        git commit -m 'Data updated' || echo "No changes to commit"
+        git push origin || echo "No changes to commit"
+          
